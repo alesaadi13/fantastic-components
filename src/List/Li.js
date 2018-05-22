@@ -1,18 +1,33 @@
-/**
- * Created by Programmer1 on 12/12/2017.
- */
-/**
- * Created by Programmer1 on 12/12/2017.
- */
-import React from 'react';
-import { LIWrapper } from './style';
+import React ,{Component} from 'react';
+import PropTypes from 'prop-types';
+import LiStyled from './style/LIStyled';
 
-class LI extends React.Component {
+class Li extends Component {
   render() {
     const { children } = this.props;
 
-    return (<LIWrapper {...this.props}>{children}</LIWrapper>);
+    return (<LiStyled {...this.props}>{children}</LiStyled>);
   }
 }
 
-export default LI;
+Li.propTypes = {
+  children: PropTypes.oneOfType([PropTypes.object, PropTypes.string, PropTypes.array]),
+  primary: PropTypes.bool,
+  secondary: PropTypes.bool,
+  info: PropTypes.bool,
+  warning: PropTypes.bool,
+  danger: PropTypes.bool,
+  success: PropTypes.bool,
+  inverse: PropTypes.bool,
+  color: PropTypes.string,
+  theme: PropTypes.object,
+  inLine: PropTypes.bool,
+  image: PropTypes.string,
+  icon: PropTypes.string,
+  text: PropTypes.string,
+  value: PropTypes.string,
+  onClick: PropTypes.func,
+  onChange: PropTypes.func
+};
+
+export default Li;

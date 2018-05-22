@@ -1,16 +1,16 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import Button from '../Button/Button';
 import Pagination from '../Pagination/Pagination';
 import Modal from '../Modal/Modal';
 
 
-
-import Th from './ThStyled';
-import Tr from './TrStyled';
-import Thead from './TheadStyled';
-import Td from './TdStyled';
-import WrapperStyled from './WrapperStyled';
-import TableStyled from './TableStyled';
+import Th from './style/ThStyled';
+import Tr from './style/TrStyled';
+import Thead from './style/TheadStyled';
+import Td from './style/TdStyled';
+import WrapperStyled from './style/WrapperStyled';
+import TableStyled from './style/TableStyled';
 
 class Table extends Component {
   constructor(props, context) {
@@ -40,23 +40,19 @@ class Table extends Component {
   }
 
   handlePageChanged(newPage) {
-
     this.setState({current: newPage});
     if (this.props.onPageChanged) {
       this.props.onPageChanged(newPage);
     }
-
   }
 
   onDeleteButtonClick(e) {
-
     if (this.props.deleteMessage) {
       this.setState({
         dialogIsOpen: true
       });
       this.rowIdForDelete = e.target.value;
-    }
-    else {
+    } else {
       this.props.onDeleteClick(e.target.value);
     }
   }
@@ -76,8 +72,7 @@ class Table extends Component {
 
   makeHeader() {
     if (this.props.columns) {
-
-      let headCols = [];
+      const headCols = [];
       let i;
       let index = 1;
       const index1 = 0;
@@ -118,45 +113,47 @@ class Table extends Component {
   }
 
   makeRows() {
-    const { getRow } = this.props;
+    const {getRow} = this.props;
 
-    let rows = [];
+    const rows = [];
     if (getRow) {
       let j;
-      let si = this.props.pageSize * (this.state.current);
+      const si = this.props.pageSize * (this.state.current);
       let Ei = si + this.props.pageSize;
       if (Ei > this.props.rowsCount) {
         Ei = this.props.rowsCount;
       }
       let index3 = 0;
-      for (j = si; j < Ei; j++, index3++) {
+      for (j = si; j < Ei; j += 1, index3 += 1) {
         let cells = [];
         cells = getRow(j);
-        let rowCells = [];
+        const rowCells = [];
         let i;
         let index1 = 1;
-        let index = 0;
-        for (i = 0; i < cells.length; i++, index1++) {
-          rowCells.push(<Td key={index1} style={{textAlign: 'center'}} {...this.props}>{cells[i]}</Td>
-          );
+        const index = 0;
+        for (i = 0; i < cells.length; i += 1, index1 += 1) {
+          rowCells.push(<Td key={index1} style={{textAlign: 'center'}} {...this.props}>{cells[i]}</Td>);
         }
-        if (this.props.onDeleteClick || this.props.onEditClick || this.props.onAcceptClick || this.props.onShowClick) {
+        if (this.props.onDeleteClick || this.props.onEditClick ||
+          this.props.onAcceptClick || this.props.onShowClick) {
           let delBtn = null;
           let editBtn = null;
           let showBtn = null;
           let hasShow = true;
-          if (this.props.rowHasShow)
+          if (this.props.rowHasShow) {
             hasShow = this.props.rowHasShow(j);
+          }
 
           if (this.props.onShowClick && hasShow) {
             showBtn = (
-              <Button value={j}
-                      onClick={this.onEditShowClick}
-                      label={this.props.labelButtonShow}
-                      icon='eye'
-                      xSmall
-                      style={{padding: "8px", marginLeft: "5px"}}
-                      {...this.props}
+              <Button
+                value={j}
+                onClick={this.onEditShowClick}
+                label={this.props.labelButtonShow}
+                icon="eye"
+                style={{padding: '0', marginLeft: '5px'}}
+                {...this.props}
+                xSmall
               />
             );
           }
@@ -171,10 +168,10 @@ class Table extends Component {
                 value={j}
                 onClick={this.onDeleteButtonClick}
                 icon="trash"
-                secondary
-                xSmall
-                style={{padding: "8px", marginLeft: "5px"}}
+                style={{padding: "0", marginLeft: "5px"}}
                 {...this.props}
+                xSmall
+                danger
               />
             );
           }
@@ -184,14 +181,14 @@ class Table extends Component {
 
           if (this.props.onEditClick && hasEdit) {
             editBtn = (
-              <Button value={j}
-                      onClick={this.onEditButtonClick}
-                      label={this.props.labelButtonEdit}
-                      icon='pencil'
-                      primary
-                      xSmall
-                      style={{padding: "8px", marginLeft: "5px"}}
-                      {...this.props}
+              <Button
+                value={j}
+                onClick={this.onEditButtonClick}
+                label={this.props.labelButtonEdit}
+                icon='pencil'
+                style={{padding: "0", marginLeft: "5px"}}
+                {...this.props}
+                xSmall
               />
             );
           }
@@ -227,7 +224,7 @@ class Table extends Component {
         <Modal
           allowClose={true}
           open={this.state.dialogIsOpen}
-          title="حذف"
+          title="Delete"
           onClose={() => this.setState({
             dialogIsOpen: false
           })}
@@ -248,10 +245,10 @@ class Table extends Component {
               });
             }
           }}
-          Btn2Type="secondary"
-          Btn1Type="primary"
-          Btn2Label={this.props.Btn2Label}
-          Btn1Label={this.props.Btn1Label}
+          Btn1Type="danger"
+          Btn2Label="Cancel"
+          Btn1Label="Delete"
+          maxWidth={480}
           Btn2action={() => this.setState({
             dialogIsOpen: false
           })}
@@ -267,7 +264,7 @@ class Table extends Component {
     const header = this.makeHeader();
     const rows = this.makeRows();
     const dlg = this.showDialog();
-    const totalSize = this.props.rowsCount / this.props.pageSize;
+    const totalSize = Math.ceil(this.props.rowsCount / this.props.pageSize);
     const start = (this.state.current) * this.props.pageSize;
     let end = start + this.props.pageSize - 1;
     if (end > this.props.rowsCount) {
@@ -276,24 +273,16 @@ class Table extends Component {
 
     return (
       <WrapperStyled {...this.props}>
-        <TableStyled style={{tableLayout: "fixed"}} {...this.props}>
+        <TableStyled style={{tableLayout: 'fixed'}} {...this.props}>
           {header}
           {rows}
         </TableStyled>
         {this.props.rowsCount > this.props.pageSize &&
-        <Pagination total={totalSize}
-                    current={this.state.current}
-                    titles={{
-                      first: 'first',
-                      prev: '\u00AB',
-                      prevSet: '...',
-                      nextSet: '...',
-                      next: '\u00BB',
-                      last: 'last'
-                    }}
-                    visiblepages={1}
-                    onPageChanged={this.handlePageChanged}
-                    {...this.props}
+        <Pagination
+          total={totalSize}
+          current={this.state.current}
+          onPageChanged={this.handlePageChanged}
+          {...this.props}
         />
         }
 
@@ -303,5 +292,49 @@ class Table extends Component {
   }
 }
 
+Table.propTypes = {
+  rowsCount: PropTypes.number.isRequired,
+  getRow: PropTypes.func.isRequired,
+  rowHasDelete: PropTypes.func,
+  rowHasEdit: PropTypes.func,
+  rowHasShow: PropTypes.func,
+  rowHasAccept: PropTypes.func,
+  columns: PropTypes.array,
+  columnSize: PropTypes.array,
+  minWidth: PropTypes.number,
+  pageSize: PropTypes.number,
+  onDeleteClick: PropTypes.func,
+  deleteMessage: PropTypes.string,
+  onRowClick: PropTypes.func,
+  onEditClick: PropTypes.func,
+  onShowClick: PropTypes.func,
+  onAcceptClick: PropTypes.func,
+  actionColumnLabel: PropTypes.string,
+  hover: PropTypes.bool,
+  striped: PropTypes.bool,
+  labelButtonEdit: PropTypes.string,
+  iconButtonEdit: PropTypes.string,
+  rowColors: PropTypes.array,
+  iconButtonSecondary: PropTypes.string,
+  labelButtonShow: PropTypes.string,
+  pageIndex: PropTypes.number,
+  onPageChanged: PropTypes.func,
+  actionNames: PropTypes.array,
+  actionValues: PropTypes.array,
+  actionIcons: PropTypes.array,
+  onActionClick: PropTypes.func,
+  primary: PropTypes.bool,
+  secondary: PropTypes.bool,
+  info: PropTypes.bool,
+  warning: PropTypes.bool,
+  danger: PropTypes.bool,
+  success: PropTypes.bool,
+  inverse: PropTypes.bool,
+  rtl: PropTypes.bool,
+  borderColor: PropTypes.string,
+  bgColor: PropTypes.string,
+  foreColor: PropTypes.string,
+  theme: PropTypes.object,
+};
 
 export default Table;

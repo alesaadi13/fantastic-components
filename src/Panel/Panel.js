@@ -1,10 +1,9 @@
 import React from 'react';
-
-
-import Wrapper from './WrapperStyled';
-import Body from './BodyStyled';
-import Footer from './FooterStyled';
-import Heading from './HeadingStyled';
+import PropTypes from 'prop-types';
+import Wrapper from './style/WrapperStyled';
+import Body from './style/BodyStyled';
+import Footer from './style/FooterStyled';
+import Heading from './style/HeadingStyled';
 
 
 class Panel extends React.Component {
@@ -14,6 +13,7 @@ class Panel extends React.Component {
       footer,
       header
     } = this.props;
+    
     return (
       <Wrapper {...this.props}>
         {
@@ -22,7 +22,7 @@ class Panel extends React.Component {
            {header}
           </Heading>
         }
-        <Body>
+        <Body {...this.props}>
           {children}
         </Body>
         {
@@ -35,5 +35,11 @@ class Panel extends React.Component {
     );
   }
 }
+
+Panel.propTypes = {
+  children: PropTypes.oneOfType([PropTypes.object, PropTypes.string, PropTypes.array]),
+  header: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
+  footer: PropTypes.oneOfType([PropTypes.object, PropTypes.string])
+};
 
 export default Panel;

@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import {Div, ButtonBox, Overlay, ButtonWrapper} from './MenuResponsiveStyle';
+import PropTypes from 'prop-types';
+import {Div, ButtonBox, Overlay, ButtonWrapper} from './style/MenuResponsiveStyle';
 import LinkStyled from '../Link/Link';
 import Icon from '../Icon/Icon';
 import Ul from '../List/Ul';
@@ -67,7 +68,7 @@ class MenuItem extends Component {
             : (<LinkStyled
               to={(!hasChild) ? linkUrl : ''}
               target={target}
-              bgColor={bgColor}
+              bgcolor={bgColor}
               color={foreColor}
             >
               {title}
@@ -146,48 +147,67 @@ class MenuResponsive extends Component {
 
     return (
 
-      <Div
-        className="navigation-wrapper"
-        {...this.props}
+      <div
+        style={{position: 'relative'}}
       >
         <ButtonBox>
           <ButtonWrapper
             icon={this.state.isShow ? 'fa fa-window-close-o' : iconClass}
             onClick={this.toggleMenu}
+            {...this.props}
           />
         </ButtonBox>
-        <nav className={`menuSimple ${!this.state.isShow ? 'sfHide' : 'sfShow' }`}>
-          <Ul className="nav sf-menu sf-js-enabled" style={{float: right ? 'right' : 'left'}}>
-            <Icon
-              iconClass='sort-asc'
-            />
-            {
-              mainItems.map((mainItem, i) => {
-                return (
-                  <MenuItem
-                    key={i}
-                    Right={right ? 'right' : 'left'}
-                    title={mainItem.title}
-                    link={mainItem.link}
-                    subItems={mainItem.subItems}
-                    language={language}
-                    icon={iconArrow}
-                  />
+        <Div
+          className="navigation-wrapper"
+          {...this.props}
+        >
 
-                )
-              })
-            }
+          <nav className={`menuSimple ${!this.state.isShow ? 'sfHide' : 'sfShow' }`}>
+            <Ul className="nav sf-menu sf-js-enabled" style={{float: right ? 'right' : 'left'}}>
+              <Icon
+                iconClass='sort-asc'
+              />
+              {
+                mainItems.map((mainItem, i) => {
+                  return (
+                    <MenuItem
+                      key={i}
+                      Right={right ? 'right' : 'left'}
+                      title={mainItem.title}
+                      link={mainItem.link}
+                      subItems={mainItem.subItems}
+                      language={language}
+                      icon={iconArrow}
+                    />
 
-          </Ul>
-        </nav>
-        <Overlay
-          onClick={this.toggleMenu}
-          style={{display: (this.state.isShow) ? 'block' : 'none'}}
-        />
-      </Div>
+                  )
+                })
+              }
+
+            </Ul>
+          </nav>
+          <Overlay
+            onClick={this.toggleMenu}
+            style={{display: (this.state.isShow) ? 'block' : 'none'}}
+          />
+        </Div>
+      </div>
 
     );
   }
 }
+
+MenuResponsive.propTypes = {
+  mainItems: PropTypes.array.isRequired,
+  bgColor: PropTypes.string,
+  foreColor: PropTypes.string,
+  iconClass: PropTypes.string,
+  iconArrow: PropTypes.string,
+  icon: PropTypes.string,
+  right: PropTypes.string,
+  left: PropTypes.string,
+  rtl: PropTypes.bool,
+  theme: PropTypes.object
+};
 
 export default MenuResponsive;

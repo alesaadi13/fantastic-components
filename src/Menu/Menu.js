@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import Ul from '../List/Ul';
 import Li from '../List/Li';
 import ReactLink from '../Link/Link';
-import Div from './MenuStyled';
+import Div from './style/MenuStyled';
 
 class MenuItem extends Component {
   render() {
@@ -31,7 +32,7 @@ class MenuItem extends Component {
         <ReactLink
           to={(linkUrl) ? linkUrl : '#'}
           target={target}
-          bgColor={bgColor}
+          bgcolor={bgColor}
           color={foreColor}
           icon={(hasChild) ? icon : ''}
         >
@@ -136,5 +137,16 @@ class Menu extends Component {
     );
   }
 }
+
+Menu.propTypes = {
+  mainItems: PropTypes.array.isRequired,
+  bgColor: PropTypes.string,
+  foreColor: PropTypes.string,
+  iconClass: PropTypes.string,
+  icon: PropTypes.string,
+  language: PropTypes.string,
+  rtl: PropTypes.bool,
+  theme: PropTypes.object,
+};
 
 export default Menu;

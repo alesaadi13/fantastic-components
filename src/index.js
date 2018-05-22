@@ -42,10 +42,17 @@ module.exports = {
   ReactLink: require('./Link/Link').default,
   Menu: require('./Menu/Menu').default,
   MenuResponsive: require('./Menu/MenuResponsive').default,
-  ButtonToggle: require('./ButtonToggle/ButtonToggle').default,
   TagEditor: require('./TagEditor/TagEditor').default,
   Drawer: require('./Drawer/Drawer').default,
   DrawerIcon: require('./Drawer/DrawerIcon').default,
   Radio: require('./Radio/Radio').default,
   RadioGroup: require('./RadioGroup/RadioGroup').default,
+  Tab: require('./Tab/Tab').default,
+  Slider: require('./Slider/Slider').default,
+  ButtonToggle: require('./ButtonToggle/ButtonToggle').default,
+  Collapsible: require('./Collapsible/Collapsible').default,
+  List: require('./List/List/List').default,
+  Window: require('./Window/Window').default,
+  DatePicker: require('./DatePicker/english/DatePicker').default,
+  ToolTip: require('./ToolTip/ToolTip').default
 };

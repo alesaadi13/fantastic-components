@@ -1,10 +1,7 @@
-/**
- * Created by Programmer1 on 12/14/2017.
- */
-import React from 'react';
-import ToolTipStyled from './ToolTipStyled';
+import React, {Component} from 'react';
+import ToolTipStyled from './style/ToolTipStyled';
 
-class Tooltip extends React.Component {
+class Tooltip extends Component {
   constructor () {
     super();
     this.state = {
@@ -32,7 +29,6 @@ class Tooltip extends React.Component {
     });
   }
 
-
   render () {
     const isVisible = this.state.isVisible ? ' is-visible' : ' is-hidden';
     const className = ` ${isVisible}`;
@@ -40,11 +36,10 @@ class Tooltip extends React.Component {
     return (
       <ToolTipStyled
         className={className}
-
         {...this.props}
         onMouseEnter={this.handleMouseEnter.bind(this)}
         onMouseLeave={this.handleMouseLeave.bind(this)}>
-        <span  >{this.props.label}</span>
+        <span>{this.props.label}</span>
         {this.props.children}
       </ToolTipStyled>
     );

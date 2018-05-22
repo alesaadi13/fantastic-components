@@ -1,10 +1,14 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import Check from './check';
 import X from './x';
 import {pointerCoord} from './util';
-
-import './style/style.css';
-
+import InputStyled from './style/InputStyled';
+import ToggleTrackStyled from './style/ToggleTrackStyled';
+import ToggleTrackCheckStyled from './style/ToggleTrackCheckStyled';
+import ToggleStyled from './style/ToggleStyled';
+import ToggleTrackX from './style/ToggleTrackX';
+import ToggleThumbStyled from './style/ToggleThumbStyled';
 
 class ButtonToggle extends Component {
   constructor(props) {
@@ -15,7 +19,6 @@ class ButtonToggle extends Component {
     this.handleTouchEnd = this.handleTouchEnd.bind(this);
     this.handleFocus = this.handleFocus.bind(this);
     this.handleBlur = this.handleBlur.bind(this);
-    this.classesFunc = this.classesFunc.bind(this);
     this.previouslyChecked = !!(props.checked || props.defaultChecked);
     this.state = {
       checked: !!(props.checked || props.defaultChecked),
@@ -124,50 +127,81 @@ class ButtonToggle extends Component {
       : icons[type]
   }
 
-  classesFunc() {
-    let classes
-    if (this.state.checked) {
-      classes = 'react-toggle--checked';
-    } else if (this.state.hasFocus) {
-      classes = 'react-toggle--focus';
-    } else if (this.props.disabled) {
-      classes = 'react-toggle--disabled';
-    }
-    return classes;
-  }
-
   render() {
     const {className, icons: _icons} = this.props;
     return (
-      <div className={this.classesFunc()}
-           onClick={this.handleClick}
-           onTouchStart={this.handleTouchStart}
-           onTouchMove={this.handleTouchMove}
-           onTouchEnd={this.handleTouchEnd}>
-        <div className='react-toggle-track'>
-          <div className='react-toggle-track-check'>
-            {this.getIcon('checked')}
-          </div>
-          <div className='react-toggle-track-x'>
-            {this.getIcon('unchecked')}
-          </div>
-        </div>
-        <div className='react-toggle-thumb'/>
+      <ToggleStyled>
+        <div onClick={this.handleClick}
+             onTouchStart={this.handleTouchStart}
+             onTouchMove={this.handleTouchMove}
+             onTouchEnd={this.handleTouchEnd}
+             style={{
+               cursor: `${(this.props.disabled) ? 'not-allowed' : ''}`,
+               opacity: `${(this.props.disabled) ? '0.5' : ''}`,
+               transition: `${(this.props.disabled) ? 'opacity 0.25s' : ''}`
+             }}
+        >
+          <ToggleTrackStyled
+            style={{backgroundColor: `${(this.state.checked) ? '#19AB27' : ''}`}}
+          >
+            <ToggleTrackCheckStyled
+              style={{
+                opacity: `${(this.state.checked) ? '1' : ''}`,
+                transition: `${(this.state.checked) ? 'opacity 0.25s ease' : ''}`
+              }}
+            >
+              {this.getIcon('checked')}
+            </ToggleTrackCheckStyled>
+            <ToggleTrackX
+              style={{
+                opacity: `${(this.state.checked) ? '0' : ''}`
+              }}
+            >
+              {this.getIcon('unchecked')}
+            </ToggleTrackX>
+          </ToggleTrackStyled>
+          <ToggleThumbStyled
+            style={{
+              left: `${(this.state.checked) ? '27px' : ''}`,
+              borderColor: `${(this.state.checked) ? '#19AB27' : ''}`
+            }}
+          />
 
-        <input
-          {...this.props}
-          ref={ref => {
-            this.input = ref
-          }}
-          onFocus={this.handleFocus}
-          onBlur={this.handleBlur}
-          className='react-toggle-screenreader-only'
-          type='checkbox'/>
-      </div>
+          <InputStyled
+            {...this.props}
+            innerRef={x => {
+              this.input = x
+            }}
+            onFocus={this.handleFocus}
+            onBlur={this.handleBlur}
+            type='checkbox'/>
+        </div>
+      </ToggleStyled>
     )
   }
 }
 
+ButtonToggle.propTypes = {
+  checked: PropTypes.bool,
+  disabled: PropTypes.bool,
+  defaultChecked: PropTypes.bool,
+  onChange: PropTypes.func,
+  onFocus: PropTypes.func,
+  onBlur: PropTypes.func,
+  className: PropTypes.string,
+  name: PropTypes.string,
+  value: PropTypes.string,
+  id: PropTypes.string,
+  'aria-labelledby': PropTypes.string,
+  'aria-label': PropTypes.string,
+  icons: PropTypes.oneOfType([
+    PropTypes.bool,
+    PropTypes.shape({
+      checked: PropTypes.node,
+      unchecked: PropTypes.node,
+    }),
+  ]),
+};
 
 ButtonToggle.defaultProps = {
   icons: {

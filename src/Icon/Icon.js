@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import 'font-awesome/css/font-awesome.css'
-import IconWrapper from './style'
-
+import IconStyled from './style/IconStyled';
 
 class Icon extends Component {
   constructor(props) {
@@ -11,12 +11,11 @@ class Icon extends Component {
 
   render() {
     const {
-      iconClass,
-      rtl
+      iconClass
     } = this.props;
 
     return (
-      <IconWrapper
+      <IconStyled
         {...this.props}
         onClick={this.props.onClick}
         className={`fa fa-${iconClass}`}
@@ -25,5 +24,32 @@ class Icon extends Component {
     );
   }
 }
+
+Icon.propTypes = {
+  devider: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
+  iconClass: PropTypes.string,
+  className: PropTypes.string,
+  onClick: PropTypes.func,
+  theme: PropTypes.object,
+  style: PropTypes.object,
+  color: PropTypes.string,
+  xxsmall: PropTypes.bool,
+  xsmall: PropTypes.bool,
+  small: PropTypes.bool,
+  medium: PropTypes.bool,
+  larg: PropTypes.bool,
+  xlarg: PropTypes.bool,
+  xxlarg: PropTypes.bool,
+  right: PropTypes.bool,
+  left: PropTypes.bool,
+
+  primary: PropTypes.bool,
+  secondary: PropTypes.bool,
+  info: PropTypes.bool,
+  warning: PropTypes.bool,
+  danger: PropTypes.bool,
+  success: PropTypes.bool,
+  inverse: PropTypes.bool,
+};
 
 export default Icon;

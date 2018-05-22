@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import ContainerWrapper from './Style';
+import PropTypes from 'prop-types';
+import ContainerStyled from './style/ContainerStyled';
 
 class Container extends Component {
 
@@ -7,15 +8,21 @@ class Container extends Component {
     const {className, children, style} = this.props;
 
     return (
-      <ContainerWrapper
+      <ContainerStyled
         className={className}
         style={style}
         {...this.props}
       >
         {children}
-      </ContainerWrapper>
+      </ContainerStyled>
     );
   }
 }
+
+Container.propTypes = {
+  children: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
+  className: PropTypes.string,
+  style: PropTypes.object
+};
 
 export default Container;

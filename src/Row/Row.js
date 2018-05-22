@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import RowWrapper from './style';
+import PropTypes from 'prop-types';
+import RowStyled from './style/RowStyled';
 
 class Row extends Component {
 
@@ -9,17 +10,22 @@ class Row extends Component {
       children,
       style
     } = this.props;
-
     return (
-      <RowWrapper
+      <RowStyled
         className={className}
         style={style}
         {...this.props}
       >
         {children}
-      </RowWrapper>
+      </RowStyled>
     );
   }
 }
+
+Row.propTypes = {
+  children: PropTypes.oneOfType([PropTypes.object, PropTypes.string, PropTypes.array]),
+  className: PropTypes.string,
+  style: PropTypes.object
+};
 
 export default Row;

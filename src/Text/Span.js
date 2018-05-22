@@ -1,7 +1,8 @@
-import React from 'react';
-import SpanStyled from './SpanStyled';
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
+import SpanStyled from './style/SpanStyled';
 
-class Span extends React.Component {
+class Span extends Component {
   render() {
     const { children } = this.props;
 
@@ -10,5 +11,9 @@ class Span extends React.Component {
     );
   }
 }
+
+Span.propTypes = {
+  children: PropTypes.oneOfType([PropTypes.object, PropTypes.string])
+};
 
 export default Span;

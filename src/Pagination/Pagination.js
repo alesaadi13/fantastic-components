@@ -1,7 +1,7 @@
-
 import React from 'react';
-import Ul from './UlStyled';
-import PaginationStyled from './PaginationStyled';
+import PropTypes from 'prop-types';
+import Ul from './style/UlStyled';
+import PaginationStyled from './style/PaginationStyled';
 
 /**
  * ## Constants
@@ -9,48 +9,42 @@ import PaginationStyled from './PaginationStyled';
 const BASE_SHIFT = 0;
 const TITLE_SHIFT = 1;
 
-const TITLES = {
-  first:   'First',
-  prev:    '\u00AB',
-  prevSet: '...',
-  nextSet: '...',
-  next:    '\u00BB',
-  last:    'Last'
-};
 
 
 class Pagination extends React.Component {
   constructor(props) {
     super(props);
 
-    this.handleFirstPage    = this.handleFirstPage.bind(this);
+    this.handleFirstPage = this.handleFirstPage.bind(this);
     this.handlePreviousPage = this.handlePreviousPage.bind(this);
-    this.handleNextPage     = this.handleNextPage.bind(this);
-    this.handleLastPage     = this.handleLastPage.bind(this);
+    this.handleNextPage = this.handleNextPage.bind(this);
+    this.handleLastPage = this.handleLastPage.bind(this);
     this.handleMorePrevPages = this.handleMorePrevPages.bind(this);
     this.handleMoreNextPages = this.handleMoreNextPages.bind(this);
-    this.handlePageChanged   = this.handlePageChanged.bind(this);
+    this.handlePageChanged = this.handlePageChanged.bind(this);
   }
 
 
   getTitles(key) {
-    return this.props.titles[key] || TITLES[key];
+    if (this.props.titles) {
+      return this.props.titles[key];
+    }
+    return TITLES[key];
   }
 
   /**
    * Calculates "blocks" of buttons with page numbers.
    */
   calcBlocks() {
-
-    const {total, visiblepages, current } = this.props;
-    const blockSize = visiblepages;
+    const { total, visiblePages, current } = this.props;
+    const blockSize = visiblePages;
     const blocks = Math.ceil(total / blockSize);
     const currBlock = Math.ceil((current + TITLE_SHIFT) / blockSize) - TITLE_SHIFT;
 
     return {
-      total:    blocks,
-      current:  currBlock,
-      size:     blockSize
+      total: blocks,
+      current: currBlock,
+      size: blockSize
     };
   }
 
@@ -118,14 +112,12 @@ class Pagination extends React.Component {
 
   handlePageChanged(num) {
     const { onPageChanged } = this.props;
-    const handler = onPageChanged;
-    if (handler) handler(num);
+    if (onPageChanged) onPageChanged(num);
   }
 
   renderPages(pair) {
     return range(pair[0], pair[1]).map((num, idx) => {
       const current = num - TITLE_SHIFT;
-      const onClick = this.handlePageChanged.bind(this, current);
       const isActive = (this.props.current === current);
 
       return (
@@ -133,17 +125,16 @@ class Pagination extends React.Component {
           key={idx}
           index={idx}
           isActive={isActive}
-          onClick={onClick}
-        >{num}</Page>
+          onClick={() => this.handlePageChanged(current)}
+        >
+          {num}
+        </Page>
       );
     });
   }
 
 
-
-
   render() {
-
     const titles = this.getTitles.bind(this);
 
     return (
@@ -153,19 +144,25 @@ class Pagination extends React.Component {
             key="btn-first-page"
             isDisabled={this.isPrevDisabled()}
             onClick={this.handleFirstPage}
-          >{titles('first')}</Page>
+          >
+            {titles('first')}
+          </Page>
 
           <Page
             key="btn-prev-page"
             isDisabled={this.isPrevDisabled()}
             onClick={this.handlePreviousPage}
-          >{titles('prev')}</Page>
+          >
+            {titles('prev')}
+          </Page>
 
           <Page
             key="btn-prev-more"
             isHidden={this.isPrevMoreHidden()}
             onClick={this.handleMorePrevPages}
-          >{titles('prevSet')}</Page>
+          >
+            {titles('prevSet')}
+          </Page>
 
           {this.renderPages(this.visibleRange())}
 
@@ -173,19 +170,25 @@ class Pagination extends React.Component {
             key="btn-next-more"
             isHidden={this.isNextMoreHidden()}
             onClick={this.handleMoreNextPages}
-          >{titles('nextSet')}</Page>
+          >
+            {titles('nextSet')}
+          </Page>
 
           <Page
             key="btn-next-page"
             isDisabled={this.isNextDisabled()}
             onClick={this.handleNextPage}
-          >{titles('next')}</Page>
+          >
+            {titles('next')}
+          </Page>
 
           <Page
             key="btn-last-page"
             isDisabled={this.isNextDisabled()}
             onClick={this.handleLastPage}
-          >{titles('last')}</Page>
+          >
+            {titles('last')}
+          </Page>
         </Ul>
       </PaginationStyled>
     );
@@ -193,20 +196,28 @@ class Pagination extends React.Component {
 }
 
 
-
 const Page = (props) => {
   if (props.isHidden) return null;
   const fullCss = ` ${props.isActive ? ' active' : ''}`;
 
   return (
-    <li key={props.index}
-        onClick={props.onClick}
-        className={fullCss}>
+    <li
+      key={props.index}
+      onClick={props.onClick}
+      className={fullCss}
+    >
       {props.children}
     </li>
   );
 };
 
+Page.propTypes = {
+  isHidden: PropTypes.bool,
+  isActive: PropTypes.bool,
+  onClick: PropTypes.func,
+  children: PropTypes.oneOfType([PropTypes.object,PropTypes.number, PropTypes.string]),
+
+};
 
 
 function range(start, end) {
@@ -217,6 +228,33 @@ function range(start, end) {
 
   return res;
 }
+
+Pagination.propTypes = {
+  total: PropTypes.number.isRequired,
+  current: PropTypes.number.isRequired,
+  visiblePages: PropTypes.number,
+  isDisabled: PropTypes.bool,
+  className: PropTypes.string,
+  onClick: PropTypes.func,
+  onPageChanged: PropTypes.func,
+  titles: PropTypes.object
+};
+
+Pagination.defaultProps = {
+  visiblePages: 3,
+  isDisabled: false,
+  className: null,
+  onClick: null,
+  onPageChanged: null,
+  titles: {
+    first: 'First',
+    prev: '\u00AB',
+    prevSet: '...',
+    nextSet: '...',
+    next: '\u00BB',
+    last: 'Last'
+  }
+};
 
 export default Pagination;
 

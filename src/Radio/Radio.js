@@ -1,7 +1,9 @@
-import React from 'react';
-import Label from './LabelStyled';
-import RadioStyled from './RadioStyled';
-class Radio extends React.Component {
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
+import Label from './style/LabelStyled';
+import Span from './style/SpanStyled';
+import RadioStyled from './style/RadioStyled';
+class Radio extends Component {
   constructor(props, context) {
     super(props, context);
     this.onSelect=this.onSelect.bind(this);
@@ -20,7 +22,8 @@ class Radio extends React.Component {
     const {
       label,
       name,
-      checked,index
+      checked,
+      disabled
     }=this.props;
 
     return (
@@ -31,11 +34,39 @@ class Radio extends React.Component {
                      name={name}
                      onChange={this.onSelect}
                      checked={checked}
+                     disabled={disabled}
         />
-        {label}
+        <Span
+          {...this.props}
+        >
+          {label}
+        </Span>
       </Label>
     )
   }
 }
+
+Radio.propTypes = {
+  label: PropTypes.string,
+  onChange: PropTypes.func,
+  onSelected: PropTypes.func,
+  name: PropTypes.string,
+  id: PropTypes.number,
+  value: PropTypes.object,
+  checked: PropTypes.bool,
+  index: PropTypes.number,
+
+  className: PropTypes.string,
+  inline: PropTypes.bool,
+  disabled: PropTypes.bool,
+
+  primary: PropTypes.bool,
+  secondary: PropTypes.bool,
+  info: PropTypes.bool,
+  warning: PropTypes.bool,
+  danger: PropTypes.bool,
+  success: PropTypes.bool,
+  inverse: PropTypes.bool
+};
 
 export default Radio;
